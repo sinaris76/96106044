@@ -4,21 +4,21 @@
 int pacplace(int *PacNowX, int *PacNowY, int PacDir,char plan[100][100],int line, int column){
 	int y=*PacNowY,x=*PacNowX, flag1=0;
 		if(PacDir==1){
-			*PacNowY=*PacNowY-1;
-			if(*PacNowY<0)
-			*PacNowY=line-1;}
-		if(PacDir==2){
-			*PacNowX=*PacNowX+1;
-			if(*PacNowX>column-1)
-			*PacNowX=0;}
-		if(PacDir== 3){
-			*PacNowY=*PacNowY+1;
-			if(*PacNowY>line-1)
-			*PacNowY=0;}
-		if(PacDir==4){
 			*PacNowX=*PacNowX-1;
 			if(*PacNowX<0)
-			*PacNowX=column-1;}
+			*PacNowX=line-1;}
+		if(PacDir==2){
+			*PacNowY=*PacNowY+1;
+			if(*PacNowY>column-1)
+			*PacNowY=0;}
+		if(PacDir== 3){
+			*PacNowX=*PacNowX+1;
+			if(*PacNowX>line-1)
+			*PacNowX=0;}
+		if(PacDir==4){
+			*PacNowY=*PacNowY-1;
+			if(*PacNowY<0)
+			*PacNowY=column-1;}
 		if(plan[*PacNowY][*PacNowX]=='#'){
 			*PacNowY=y;	
 			*PacNowX=x;
@@ -27,11 +27,11 @@ int pacplace(int *PacNowX, int *PacNowY, int PacDir,char plan[100][100],int line
 }
 int pacpoints(int *points,int* heart,int PacNowX, int PacNowY, char plan[100][100], int PinkyNowX,int PinkyNowY,int PinkyType, int BlinkyNowX,int BlinkyNowY,int BlinkyType,int InkyNowX,int InkyNowY,int InkyType,int ClydeNowX,int ClydeNowY,int ClydeType){
 	int flag=0;
-	if (plan[PacNowY][PacNowX]=='*'){
+	if (plan[PacNowX][PacNowY]=='*'){
 		*points=*points+1;}
-	if (plan[PacNowY][PacNowX]=='^'){
+	if (plan[PacNowX][PacNowY]=='^'){
 		*points=*points+20;}
-	if (plan[PacNowY][PacNowX]=='O'){
+	if (plan[PacNowX][PacNowY]=='O'){
 		*points=*points+50;}
 	if(PacNowX==BlinkyNowX && PacNowY==BlinkyNowY){
 		if(BlinkyType){
@@ -59,6 +59,20 @@ int pacpoints(int *points,int* heart,int PacNowX, int PacNowY, char plan[100][10
 		*points=*points+50;}
 		return flag;
 }
+int winning(int heart, char plan[100][100], int line , int column){
+	int win,i,j;
+	if(heart==0)
+		win=0;
+	else{
+		for(i=0;i<line;i++){
+			for(j=0;j<column;j++){
+				if(plan[i][j]=='O'|| plan[i][j]=='*'){
+				win=0;
+				return win;}		
+			}}
+			win=1;}
+	return win;
+}
 int main() {
 	int line,column,minute,second, points, heart,PacDir,PacStartX,PacStartY,PacNowX,PacNowY,BlinkyDir,BlinkyStartX,BlinkyStartY,BlinkyNowX,BlinkyNowY,BlinkyType,BlinkyTime;
 	
@@ -66,7 +80,7 @@ int main() {
 	
 	char plan[100][100];
 	
-	int i,j,flag,flag1;
+	int i,j,flag,flag1,win;
 	
 	scanf("%d %d\n",&line,&column);
 	
@@ -107,7 +121,14 @@ int main() {
 		PacNowX=PacStartX;
 		PacNowY=PacStartY;
 	}}
+	win=winning(heart,plan,line,column);
+	
 printf("(%d,%d)\n",PacNowX,PacNowY);
-printf("%d",points);
+printf("%d\n",points);
+
+if(win)
+printf("Yes");
+else
+printf("No");
 	return 0;
 }
