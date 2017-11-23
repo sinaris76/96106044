@@ -1,6 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+void pacplace(int *PacNowX, int *PacNowY, int PacDir){
+		if(PacDir==1)
+		*PacNowY=*PacNowY-1;
+		if(PacDir==2)
+		*PacNowX=*PacNowX+1;
+		if(PacDir== 3)
+		*PacNowY=*PacNowY+1;
+		if(PacDir==4)
+		*PacNowX=*PacNowX-1;	
+}
 int main() {
 	int line,column,minute,second, points, heart,PacDir,PacStartX,PacStartY,PacNowX,PacNowY,BlinkyDir,BlinkyStartX,BlinkyStartY,BlinkyNowX,BlinkyNowY,BlinkyType;
 	
@@ -30,6 +39,8 @@ int main() {
 	scanf("\n");
 	scanf("inky: %d %d (%d,%d) (%d,%d)",&InkyDir,&InkyType,&InkyStartX,&InkyStartY,&InkyNowX,&InkyNowY);
 		
+pacplace(&PacNowX,&PacNowY,PacDir);
 
+printf("(%d,%d)",PacNowX,PacNowY);
 	return 0;
 }
