@@ -36,8 +36,8 @@ int pacpoints(int *points,int* heart,int PacNowX, int PacNowY, char plan[100][10
 		plan[PacNowX][PacNowY]='_';}
 		
 	if (plan[PacNowX][PacNowY]=='O'){
-		*points=*points+50;
-		plan[PacNowX][PacNowY]='_';}
+		plan[PacNowX][PacNowY]='_';
+		BlinkyType=PinkyType=InkyType=ClydeType=0;}
 		
 	if(PacNowX==BlinkyNowX && PacNowY==BlinkyNowY){
 		if(BlinkyType){
@@ -125,7 +125,7 @@ int main() {
    flag1=pacplace(&PacNowX,&PacNowY,PacDir,plan,line,column);
    if (flag1==0){
    flag=pacpoints(&points, &heart,PacNowX,PacNowY,plan,PinkyNowX,PinkyNowY,PinkyType,BlinkyNowX,BlinkyNowY,BlinkyType,InkyNowX,InkyNowY,InkyType,ClydeNowX,ClydeNowY,ClydeType);
-	if(flag==1 && heart!=0){
+	if(flag==1){
 		PacNowX=PacStartX;
 		PacNowY=PacStartY;
 	}}
