@@ -28,11 +28,17 @@ int pacplace(int *PacNowX, int *PacNowY, int PacDir,char plan[100][100],int line
 int pacpoints(int *points,int* heart,int PacNowX, int PacNowY, char plan[100][100], int PinkyNowX,int PinkyNowY,int PinkyType, int BlinkyNowX,int BlinkyNowY,int BlinkyType,int InkyNowX,int InkyNowY,int InkyType,int ClydeNowX,int ClydeNowY,int ClydeType){
 	int flag=0;
 	if (plan[PacNowX][PacNowY]=='*'){
-		*points=*points+1;}
+		*points=*points+1;
+		plan[PacNowX][PacNowY]='_';}
+		
 	if (plan[PacNowX][PacNowY]=='^'){
-		*points=*points+20;}
+		*points=*points+20;
+		plan[PacNowX][PacNowY]='_';}
+		
 	if (plan[PacNowX][PacNowY]=='O'){
-		*points=*points+50;}
+		*points=*points+50;
+		plan[PacNowX][PacNowY]='_';}
+		
 	if(PacNowX==BlinkyNowX && PacNowY==BlinkyNowY){
 		if(BlinkyType){
 		*heart=*heart-1;
@@ -59,6 +65,7 @@ int pacpoints(int *points,int* heart,int PacNowX, int PacNowY, char plan[100][10
 		*points=*points+50;}
 		return flag;
 }
+
 int winning(int heart, char plan[100][100], int line , int column){
 	int win,i,j;
 	if(heart==0)
@@ -73,6 +80,7 @@ int winning(int heart, char plan[100][100], int line , int column){
 			win=1;}
 	return win;
 }
+
 int main() {
 	int line,column,minute,second, points, heart,PacDir,PacStartX,PacStartY,PacNowX,PacNowY,BlinkyDir,BlinkyStartX,BlinkyStartY,BlinkyNowX,BlinkyNowY,BlinkyType,BlinkyTime;
 	
