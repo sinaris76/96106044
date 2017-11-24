@@ -2,7 +2,9 @@
 #include <stdlib.h>
 
 int pacplace(int *PacNowX, int *PacNowY, int PacDir,char plan[100][100],int line, int column){
-	int y=*PacNowY,x=*PacNowX, flag1=0;
+	int y=*PacNowY;
+	int x=*PacNowX;
+	int flag1=0;
 		if(PacDir==1){
 			*PacNowX=*PacNowX-1;
 			if(*PacNowX<0)
@@ -19,8 +21,8 @@ int pacplace(int *PacNowX, int *PacNowY, int PacDir,char plan[100][100],int line
 			*PacNowY=*PacNowY-1;
 			if(*PacNowY<0)
 			*PacNowY=column-1;}
-		if(plan[*PacNowY][*PacNowX]=='#'){
-			*PacNowY=y;	
+		if(plan[*PacNowX][*PacNowY]=='#'){
+			*PacNowY=y;
 			*PacNowX=x;
 			flag1=1;}
 	return flag1;
