@@ -127,13 +127,19 @@ int convert2node(const Map *map, double y, double x, int flag) {
     else
         return (((int)y)*map->width+(int)x);
 }
+int pinkynode(const Map *map, Pacman *pacman, int i) {
+    if(pacman->y+i*(pacman->dir%2==1)*(pacman->dir-2)>=map->height ||pacman->x-i*(pacman->dir%2==0)*(pacman->dir-3)>=map->width )
+        return -2;
+    if(pacman->y+i*(pacman->dir%2==1)*(pacman->dir-2)<0 ||pacman->x-i*(pacman->dir%2==0)*(pacman->dir-3)<0 )
+        return -2;
+    return convert2node(map,pacman->y+i*(pacman->dir%2==1)*(pacman->dir-2),pacman->x-i*(pacman->dir%2==0)*(pacman->dir-3),1);
+}
 
 Direction decideGhost(const Map *map, Ghost *ghost, Pacman *pacman, Ghost *blinky) {
     int ghostx =(int)ghost->x;
     int ghosty=(int)ghost->y;
     int level=0;
     Direction Dir;
-    printf(" ghostx1=%lf ghosty1=%lf",ghost->x,ghost->y);
     if(ghost->x==ghostx && ghost->y==ghosty ){
         int* edges=malloc(10000*10000*sizeof(int));
         makegraph(map,edges);
@@ -151,6 +157,37 @@ Direction decideGhost(const Map *map, Ghost *ghost, Pacman *pacman, Ghost *blink
                 free(edges);
                 return Dir;
             }}
+        if(ghost->type==PINKY){
+            if(ghost->blue==false){
+                if( pinkynode(map,pacman,4)==-2){
+                    Dir=finddir(map,edges,ghost,ghostnode,pacnode,&level);
+                    free(edges);
+                    return Dir; }
+                if(pinkynode(map,pacman,1)==-1){
+                    Dir=finddir(map,edges,ghost,ghostnode,pacnode,&level);
+                    free(edges);
+                    return Dir;}
+                if(pinkynode(map,pacman,2)==-1){
+                    Dir=finddir(map,edges,ghost,ghostnode,pinkynode(map,pacman,1),&level);
+                    free(edges);
+                    return Dir;}
+                if(pinkynode(map,pacman,3)==-1){
+                    Dir=finddir(map,edges,ghost,ghostnode,pinkynode(map,pacman,2),&level);
+                    free(edges);
+                    return Dir;}
+                if(pinkynode(map,pacman,4)==-1){
+                    Dir=finddir(map,edges,ghost,ghostnode,pinkynode(map,pacman,3),&level);
+                    free(edges);
+                    return Dir;}
+                Dir=finddir(map,edges,ghost,ghostnode,pinkynode(map,pacman,4),&level);
+                free(edges);
+                return Dir;
+            }
+            else{
+                Dir=finddir(map,edges,ghost,ghostnode,ghoststartnode,&level);
+                free(edges);
+                return Dir;}
+        }
         else return DIR_UP;
     }}
 
