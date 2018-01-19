@@ -8,6 +8,10 @@
 #define GHOST_DEFAULT_SPEED 2.
 
 void makegraph(const Map *map,int* adj);
+void insert_queue(int vertex, int *front, int *rear, int queue[10000][2], int root, int mainroot);
+int delete_queue(int *front, int (*queue)[2]);
+int isEmpty_queue(int front, int rear);
+int BFS(int root, int destin, int *edges, const Map *map,int* levelcount);
 Direction decidePacman(const Map* map, Pacman* pacman, Action action);
 
 
