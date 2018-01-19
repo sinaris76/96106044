@@ -188,7 +188,59 @@ Direction decideGhost(const Map *map, Ghost *ghost, Pacman *pacman, Ghost *blink
                 free(edges);
                 return Dir;}
         }
-        else return DIR_UP;
+        if(ghost->type==CLYDE){
+            if(ghost->blue==false){
+                Direction a= finddir(map,edges,ghost,ghostnode,pacnode,&level);
+                if(level>8){
+                    free(edges);
+                    return a;
+                }
+                else{
+                    level=0;
+                    int corner=convert2node(map,map->height-1,0,1);
+                    if(corner==-1){
+                        Dir=finddir(map,edges,ghost,ghostnode,ghostnode,&level);
+                        while(Dir==-1)
+                            Dir=finddir(map,edges,ghost,ghostnode,ghostnode,&level);}
+                    else{
+                        Dir=finddir(map,edges,ghost,ghostnode,corner,&level);}
+                    free(edges);
+                    return Dir; }}
+            else{
+                Dir= finddir(map,edges,ghost,ghostnode,ghoststartnode,&level);
+                free(edges);
+                return Dir; }}
+
+        if(ghost->type==INKY){
+            if(ghost->blue==false) {
+                level=0;
+                int mirrorY=(int)(pacman->y+2*(pacman->dir%2==1)*(pacman->dir-2))%map->height;
+                if(mirrorY<0){
+                    mirrorY=mirrorY+map->height;}
+                int mirrorX=(int)(pacman->x-2*(pacman->dir%2==0)*(pacman->dir-3))%map->width;
+                if(mirrorX<0){
+                    mirrorX=mirrorX+map->width;}
+                int aimY=(2*mirrorY-(int)blinky->y)%map->height;
+                int aimX=(2*mirrorX-(int)blinky->x)%map->width;
+                int aimnode=convert2node(map,aimY+(aimY<0)*map->height,aimX+(aimX<0)*map->width,1);
+                if(aimnode!=-1){
+                    Dir= finddir(map,edges,ghost,ghostnode,aimnode,&level);
+                    free(edges);
+                    return Dir;
+                }
+                else{
+                    Dir=finddir(map,edges,ghost,ghostnode,ghostnode,&level);
+                    while(Dir==-1){
+                        Dir=finddir(map,edges,ghost,ghostnode,ghostnode,&level);}
+                    free(edges);
+                    return Dir;
+                }}
+
+            else{
+                Dir= finddir(map,edges,ghost,ghostnode,ghoststartnode,&level);
+                free(edges);
+                return Dir;}
+        }
     }}
 
 Direction decidePacman(const Map* map, Pacman* pacman, Action action) {
