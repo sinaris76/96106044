@@ -26,12 +26,13 @@ void makegraph(const Map *map, int *adj) {
     }
 }
 
-void insert_queue(int vertex, int *front, int *rear, int (*queue)[2], int root, int mainroot) {
+void insert_queue(int vertex, int *front, int *rear, int queue[10000][3], int root, int mainroot) {
     int i,Root=0;
     if(*front == -1)
         *front = 0;
     *rear = *rear+1;
     queue[*rear][0] = vertex ;
+    queue[*rear][2] = root;
     if(vertex==root || root==mainroot){
         queue[*rear][1]=queue[*rear][0];
     }
@@ -43,7 +44,7 @@ void insert_queue(int vertex, int *front, int *rear, int (*queue)[2], int root, 
         queue[*rear][1]= queue[Root][1]; }
 }
 
-int delete_queue(int *front, int (*queue)[2]) {
+int delete_queue(int *front, int (*queue)[3]) {
     int delete_item;
     delete_item = queue[*front][0];
     *front = *front+1;
@@ -57,18 +58,17 @@ int isEmpty_queue(int front, int rear) {
         return 0;
 }
 
-int BFS(int root, int destin, int *edges, const Map *map, int *levelcount) {
-    int i;
+int BFS(int root, int destin, int *edges, const Map *map,int* levelcount) {
+    int i,j;
     *levelcount=0;
     int mainroot=root;
     int front=-1,rear=-1;
     int state[10000]={0};
-    int queue[10000][2]={0};
+    int queue[10000][3]={0};
     insert_queue(root,&front,&rear,queue,root,mainroot);
     state[root] = 1;
     while(!isEmpty_queue(front,rear))
     {
-
         root = delete_queue(&front,queue);
         state[root] = 2;
         for(i=0; i<map->height*map->width; i++)
@@ -79,11 +79,15 @@ int BFS(int root, int destin, int *edges, const Map *map, int *levelcount) {
                 insert_queue(i,&front,&rear,queue,root,mainroot);
                 state[i] = 1;
                 if(i==destin){
-
-                    for(i=0;i<rear;i++){
-                        if(queue[i][1]==queue[rear][1])
-                            *levelcount=*levelcount+1;
+                    int start=queue[rear][2];
+                    while(start!=queue[0][1]){
+                        for(j=0;j<=rear;j++){
+                            if(start==queue[j][0]){
+                                start=queue[j][2];}
+                        }
+                        (*levelcount)++;
                     }
+                    (*levelcount)++;
                     return queue[rear][1];
                 }}}}
 }
