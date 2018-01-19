@@ -88,10 +88,67 @@ int BFS(int root, int destin, int *edges, const Map *map, int *levelcount) {
                 }}}}
 }
 
-Direction decideGhost(const Map* map, Ghost* ghost) {
+Direction finddir(const Map *map, int *edges, Ghost *ghost, int node1, int node2, int *level0) {
+    if(node1==node2){
+        int dir=(int)(((double)rand()/RAND_MAX)*5+1);
+        if(dir==5)
+            dir=-1;
+        if(dir==1) {
+            if (map->cells[(int)(ghost->x)][(int)ghost->y-1+((int)ghost->y-1<0)*map->height]==CELL_BLOCK )
+                dir=-1; }
+        if(dir==2) {
+            if (map->cells[(int)(ghost->x)+1-((int)ghost->x+1>=map->width)*map->width][(int)(ghost->y)]==CELL_BLOCK )
+                dir=-1; }
+        if(dir==3) {
+            if (map->cells[(int)(ghost->x)][(int)ghost->y+1-((int)ghost->y+1>=map->height)*map->height]==CELL_BLOCK)
+                dir=-1; }
+        if(dir==4) {
+            if (map->cells[(int)(ghost->x)-1+((int)ghost->x-1<0)*map->width][(int)ghost->y]==CELL_BLOCK)
+                dir=-1; }
+        return (Direction)dir;}
 
-
+    if(BFS(node1,node2,edges,map,level0)==(node1+1)%map->width+(node1/map->width)*map->width){
+        return DIR_RIGHT;}
+    if(BFS(node1,node2,edges,map,level0)==(node1-1)%map->width+(node1/map->width)*map->width){
+        return DIR_LEFT;}
+    if(BFS(node1,node2,edges,map,level0)==(node1+map->width)-(node1+map->width>=map->width*map->height)*map->width*map->height){
+        return DIR_DOWN;}
+    if(BFS(node1,node2,edges,map,level0)==(node1-map->width)+(node1-map->width<0)*map->height*map->width){
+        return DIR_UP;}
 }
+
+int convert2node(const Map *map, double y, double x, int flag) {
+    if(map->cells[(int)x][(int)y]==CELL_BLOCK && flag==1)
+        return -1;
+    else
+        return (((int)y)*map->width+(int)x);
+}
+
+Direction decideGhost(const Map *map, Ghost *ghost, Pacman *pacman, Ghost *blinky) {
+    int ghostx =(int)ghost->x;
+    int ghosty=(int)ghost->y;
+    int level=0;
+    Direction Dir;
+    printf(" ghostx1=%lf ghosty1=%lf",ghost->x,ghost->y);
+    if(ghost->x==ghostx && ghost->y==ghosty ){
+        int* edges=malloc(10000*10000*sizeof(int));
+        makegraph(map,edges);
+        int ghostnode=convert2node(map,ghost->y,ghost->x,0);
+        int pacnode=convert2node(map,pacman->y,pacman->x,0);
+        int ghoststartnode=convert2node(map,ghost->startY,ghost->startX,0);
+        if(ghost->type==BLINKY ){
+            if(ghost->blue==false){
+                Dir=finddir(map,edges,ghost,ghostnode,pacnode,&level);
+                free(edges);
+                return Dir;
+            }
+            else{
+                Dir=finddir(map,edges,ghost,ghostnode,ghoststartnode,&level);
+                free(edges);
+                return Dir;
+            }}
+        else return DIR_UP;
+    }}
 
 Direction decidePacman(const Map* map, Pacman* pacman, Action action) {
     int intpacmanx=pacman->x/1;
