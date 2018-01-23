@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <math.h>
 void makegraph(const Map *map, int *adj) {
     int i,j;
     int h=map->height;
@@ -190,8 +190,8 @@ Direction decideGhost(const Map *map, Ghost *ghost, Pacman *pacman, Ghost *blink
         }
         if(ghost->type==CLYDE){
             if(ghost->blue==false){
-                Direction a= finddir(map,edges,ghost,ghostnode,pacnode,&level);
-                if(level>8){
+                if((fabs(ghost->x-pacman->x)+fabs(ghost->y-pacman->y))>8){
+                    Direction a= finddir(map,edges,ghost,ghostnode,pacnode,&level);
                     free(edges);
                     return a;
                 }
